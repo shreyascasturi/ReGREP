@@ -3,6 +3,7 @@ A project (that'll take a long time to be done) about recreating the grep utilit
 
 
 # What is GREP?
+(To be continued)
 
-when we have a collection of strings (a string being a collection of characters)`test string`
+
 
