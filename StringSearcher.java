@@ -12,33 +12,42 @@ public class StringSearcher {
         }
     }
 
+    // implementation of boyer moore string searching algorithm (basic)
     public static int reGREP(String pattern, String sequence) {
         
         int num_occurrences = 0;
         HashMap<Character, Integer> pat_table = StringSearcher.pprocess(pattern);
         int seq_length = sequence.length();
-        System.out.printf("sequence length is: %d\n", seq_length);
         int pat_length = pattern.length();
+        
         while (seq_length >= pat_length) {
-            int pat_iterator = pat_length - 1;
-            while (pat_iterator >= -1) {
-                if (pat_iterator == -1) {
+
+            int pat_iter_idx = pat_length - 1;
+
+            while (pat_iter_idx >= -1) {
+
+                if (pat_iter_idx == -1) {
                     num_occurrences++;
                     seq_length -= pat_length;
                     break;
                 }
-                char pat_char = pattern.charAt(pat_iterator);
-                System.out.printf("char in pattern at %d is %c\n", pat_iterator, pat_char);
-                char seq_char = sequence.charAt(pat_iterator);
-                System.out.printf("char in sequence at %d is %c\n", pat_iterator, seq_char);
+                
+                char pat_char = pattern.charAt(pat_iter_idx);
+                char seq_char = sequence.charAt(pat_iter_idx);
+
                 if (pat_char == seq_char) {
-                    pat_iterator--;
+                    pat_iter_idx--;
+                } else if (pat_map.keySet().contains(seq_char)) {
+                    int seq_char_pat_idx = pat_map.get(seq_char);
+                    if (seq_char_pat_idx )
                 }
             }
+            
             if (seq_length < pat_length) {
                 return num_occurrences;
             } else {
-                String next_substring = sequence.substring(pat_length + 1);
+                String seq_rem_string = sequence.substring(pat_length + 1);
+                sequence = seq_rem_string;
             }
             
         }
@@ -58,3 +67,4 @@ public class StringSearcher {
         return pat_map;
     }
 }
+                // System.out.printf("char in sequence at %d is %c\n", pat_iter_idx, seq_char);
