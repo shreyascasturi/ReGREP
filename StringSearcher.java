@@ -1,13 +1,17 @@
 import java.util.HashMap;
 
-// this will not work with repeating letter patterns
+
 public class StringSearcher {
     private static HashMap<Character, Integer> pat_table;
+    private static String pattern;
+    private static String sequence;
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("GREP will not work. Terminating.");
             
         } else {
+            pattern = args[0];
+            sequence = args[1]
             pat_table = StringSearcher.pprocess(args[0]);
             int pat_num_occurrences = StringSearcher.reGREP(args[0], args[1]);
             System.out.printf("the number of occurrences of %s in %s is %d. Terminating.\n", args[0], args[1], pat_num_occurrences);
@@ -30,35 +34,41 @@ public class StringSearcher {
 
                 if (pat_iter_idx == -1) {
                     num_occurrences++;
+                    int shift_up_amt = seq_length - pat_length;
+                    StringSearcher.sequence.substring(shift_up_amt);
                     seq_length -= pat_length;
                     break;
                 }
                 
                 char pat_char = pattern.charAt(pat_iter_idx);
                 char seq_char = sequence.charAt(pat_iter_idx);
-
+                // check each char.
+                // if equal, decrement.
+                // else, shift completely or partial shift.
                 if (pat_char == seq_char) {
                     pat_iter_idx--;
                 } else if (pat_map.keySet().contains(seq_char)) {
-                    StringSearcher.next_shift(pat_map, pat_char, seq_char);                        
-                   }
+                    // we know pattern contains seq char somewhere.
+                    // we need to determine if last occurrence of pat char is BEFORE seq char.
+                    // if it is, then we shift up by that amount of space/modify string
+                    
+                    int shift_up_amt = StringSearcher.next_shift(pat_map, pat_ider_idx);
+                    seq_length -= shift_up_amt;
+                    break;
+                    
+                } else {
+                    //String seq_rem_string = sequence.substring(pat_length + 1);
+                    //sequence = seq_rem_string;
+                    int shift_up_amt = 
                 }
-            }
-            if (need_to_shift) {
-                need_to_shift = false;
-                int seq_char_pat_idx = pat_map.get(seq_char);
             }
             if (seq_length < pat_length) {
                 return num_occurrences;
-            } else {
-                String seq_rem_string = sequence.substring(pat_length + 1);
-                sequence = seq_rem_string;
-            }
-            
-        }
+            } 
 
+        }
         return 0;
-        
+            
     }
 
     public static HashMap<Character, Integer> pprocess(String pattern) {
@@ -72,16 +82,22 @@ public class StringSearcher {
         return pat_map;
     }
 
-    public static void find_shift(HashMap<Character, Integer> pat_map, char pat_char, char seq_char) {
-        int seq_char_pat_idx = pat_map.get(seq_char);
-        // pat: ABCDE
-        // seq: XYADE
-        // seq: A at loc 2 (pat iter idx)
-        // pat: A at loc 0 (seq char pat idx)
-        // move!
+    // pat: ABCDE
+    // seq: XYADE
+    // seq: A at loc 2 (pat iter idx)
+    // pat: A at loc 0 (seq char pat idx)
+    // move!
+    public static int find_shift(HashMap<Character, Integer> pat_map, int pat_iter_idx) {
+        int seq_char_pat_idx = pat_map.get(StringSearcher.sequence.charAt(pat_iter_idx));
+
         if (seq_char_pat_idx < pat_iter_idx ) {
-            pat_iter_idx = pat_length - 1;
-        
+            pat_iter_idx = pat_length - 1; // reset pat_iter_idx
+            int shift_up_amt = pat_iter_idx - seq_char_pat_idx;
+            StringSearcher.sequence = StringSearcher.sequence.substring(shift_up_amt);
+            return shift_up_amt;
+        } else { // calculate regular shift
+            
+        }
     }
 }
                 // System.out.printf("char in sequence at %d is %c\n", pat_iter_idx, seq_char);
